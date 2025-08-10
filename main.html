@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>NASA Space App Challange 2025</title>
+    <meta name="description" content="Mô tả trang web">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <script type="module" src="js/main.js"></script>
+
+    <header>
+        <h1>NASA Space App Challenge 2025</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#about">Giới thiệu</a></li>
+                <li><a href="#projects">Dự án</a></li>
+                <li><a href="#gallery">Thư viện</a></li>
+                <li><a href="#contact">Liên hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <h2>Khám phá vũ trụ cùng NASA</h2>
+            <p>Tham gia cuộc thi lập trình toàn cầu để giải quyết các thách thức không gian</p>
+            <img src="https://picsum.photos/800/400?random=0" alt="NASA Space Challenge Banner">
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="window.location.href='globe.html'">Mô phỏng Địa Cầu 🌍</button>
+                <button class="btn-secondary">Tìm hiểu thêm</button>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <h2>Về NASA Space App Challenge</h2>
+            <p>NASA Space Apps Challenge là cuộc thi hackathon toàn cầu lớn nhất thế giới, nơi các đội tham gia 
+            sử dụng dữ liệu mở của NASA để giải quyết các thách thức trong không gian và Trái Đất.</p>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <h3>25,000+</h3>
+                    <p>Người tham gia</p>
+                </div>
+                <div class="stat-item">
+                    <h3>150+</h3>
+                    <p>Quốc gia</p>
+                </div>
+                <div class="stat-item">
+                    <h3>48</h3>
+                    <p>Giờ hackathon</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Gallery -->
+        <section id="projects">
+            <h2>Dự án nổi bật</h2>
+            <div class="project-grid">
+                <article class="project-card">
+                    <img src="project1.jpg" alt="Dự án 1">
+                    <h3>Theo dõi khí hậu</h3>
+                    <p>Ứng dụng theo dõi biến đổi khí hậu sử dụng dữ liệu vệ tinh NASA</p>
+                    <a href="#" class="project-link">Xem chi tiết</a>
+                </article>
+                
+                <article class="project-card">
+                    <img src="project2.jpg" alt="Dự án 2">
+                    <h3>Mô phỏng sao Hỏa</h3>
+                    <p>Trải nghiệm thực tế ảo khám phá bề mặt sao Hỏa</p>
+                    <a href="#" class="project-link">Xem chi tiết</a>
+                </article>
+
+                <article class="project-card">
+                    <img src="project3.jpg" alt="Dự án 3">
+                    <h3>Dự báo thiên tai</h3>
+                    <p>Hệ thống cảnh báo sớm thiên tai từ dữ liệu không gian</p>
+                    <a href="#" class="project-link">Xem chi tiết</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- Data Gallery -->
+        <section id="gallery">
+            <h2>Thư viện hình ảnh</h2>
+            <div class="image-gallery">
+                <img src="space1.jpg" alt="Hình ảnh không gian 1">
+                <img src="space2.jpg" alt="Hình ảnh không gian 2">
+                <img src="space3.jpg" alt="Hình ảnh không gian 3">
+                <img src="space4.jpg" alt="Hình ảnh không gian 4">
+            </div>
+        </section>
+
+        <!-- Registration Form -->
+        <section id="contact">
+            <h2>Đăng ký tham gia</h2>
+            <form class="registration-form">
+                <div class="form-group">
+                    <label for="fullname">Họ và tên:</label>
+                    <input type="text" id="fullname" name="fullname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="team">Tên đội:</label>
+                    <input type="text" id="team" name="team">
+                </div>
+
+                <div class="form-group">
+                    <label for="experience">Kinh nghiệm lập trình:</label>
+                    <select id="experience" name="experience">
+                        <option value="">Chọn mức độ</option>
+                        <option value="beginner">Mới bắt đầu</option>
+                        <option value="intermediate">Trung bình</option>
+                        <option value="advanced">Nâng cao</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Lời nhắn:</label>
+                    <textarea id="message" name="message" rows="4" placeholder="Chia sẻ động lực tham gia của bạn..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <input type="checkbox" id="newsletter" name="newsletter">
+                    <label for="newsletter">Đăng ký nhận tin tức</label>
+                </div>
+
+                <button type="submit" class="btn-submit">Đăng ký tham gia</button>
+            </form>
+        </section>
+
+        <!-- Timeline -->
+        <section class="timeline">
+            <h2>Lịch trình sự kiện</h2>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="timeline-date">Tháng 8</div>
+                    <div class="timeline-content">
+                        <h3>Mở đăng ký</h3>
+                        <p>Bắt đầu nhận đăng ký từ các đội tham gia</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Tháng 9</div>
+                    <div class="timeline-content">
+                        <h3>Công bố thách thức</h3>
+                        <p>Ra mắt các thách thức chính thức cho năm 2025</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">Tháng 10</div>
+                    <div class="timeline-content">
+                        <h3>Cuộc thi chính</h3>
+                        <p>48 giờ hackathon toàn cầu</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Table -->
+        <section>
+            <h2>Thống kê năm trước</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Khu vực</th>
+                        <th>Số đội tham gia</th>
+                        <th>Dự án được gửi</th>
+                        <th>Giải thưởng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Châu Á - Thái Bình Dương</td>
+                        <td>2,547</td>
+                        <td>1,823</td>
+                        <td>15</td>
+                    </tr>
+                    <tr>
+                        <td>Bắc Mỹ</td>
+                        <td>3,124</td>
+                        <td>2,456</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>Châu Âu</td>
+                        <td>2,891</td>
+                        <td>2,134</td>
+                        <td>18</td>
+                    </tr>
+                    <tr>
+                        <td>Châu Phi</td>
+                        <td>1,432</td>
+                        <td>987</td>
+                        <td>8</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h4>Tài nguyên hữu ích</h4>
+            <ul>
+                <li><a href="#">API NASA</a></li>
+                <li><a href="#">Dữ liệu vệ tinh</a></li>
+                <li><a href="#">Hướng dẫn phát triển</a></li>
+                <li><a href="#">Ví dụ dự án</a></li>
+            </ul>
+            
+            <div class="social-links">
+                <h4>Theo dõi chúng tôi</h4>
+                <a href="#" class="social-link">Facebook</a>
+                <a href="#" class="social-link">Twitter</a>
+                <a href="#" class="social-link">LinkedIn</a>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 NASA Space App Challenge. Bản quyền thuộc về NASA.</p>
+            <div class="footer-links">
+                <a href="#">Chính sách bảo mật</a>
+                <a href="#">Điều khoản sử dụng</a>
+                <a href="#">Liên hệ</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

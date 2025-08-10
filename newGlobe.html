@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Choropleth Globe</title>
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #globeViz { width: 100vw; height: 100vh; }
+    </style>
+  </head>
+  <body>
+    <div id="globeViz"></div>
+
+    <script src="https://unpkg.com/three"></script>
+    <script src="https://unpkg.com/globe.gl@2.24.0/dist/globe.gl.min.js"></script>
+    <script src="https://unpkg.com/d3-scale-chromatic@3.0.0/dist/d3-scale-chromatic.min.js"></script>
+    <script src="https://unpkg.com/d3-scale"></script>
+    <script>
+      const container = document.getElementById('globeViz');
+      const world = Globe()(container)
+        .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-dark.jpg')
+        .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png');
+
+      // Bản đồ GeoJSON + dữ liệu nhiệt độ mẫu
+      fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+        .then(res => res.json())
+        .then(countries => {
+          // Mẫu nhiệt độ trung bình (°C) theo quốc gia
+          const tempData = {
+            "Vietnam": 26.5,
+            "United States": 13.0,
+            "Canada": -5.5,
+            "Brazil": 25.0,
+            "Russia": -6.0,
+            "Australia": 21.8,
+            "India": 24.5,
+            "China": 14.0,
+            "United Kingdom": 9.5
+          };
+
+        //   // Tạo scale màu từ xanh → đỏ
+        //   const tempVals = Object.values(tempData);
+        //   const colorScale = d3.scaleSequential()
+        //     .domain([Math.min(...tempVals), Math.max(...tempVals)])
+        //     .interpolator(d3.interpolateYlOrRd);
+
+        //   // Thêm field "avgTemp" và hiển thị polygon
+        //   countries.features.forEach(feat => {
+        //     const name = feat.properties.name;
+        //     feat.properties.avgTemp = tempData[name] ?? null;
+        //   });
+        world
+        .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+        .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+        .polygonsData(countries.features)
+        .polygonAltitude(0.003)
+        .polygonCapColor(() => 'rgba(0,0,0,0)')
+        .polygonSideColor(() => 'rgba(0,0,0,0)')
+        .polygonStrokeColor(() => '#ffffff')
+        .polygonStrokeWidth(0.4);
+
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Quả Địa Cầu - NASA Space Challenge</title>
+    
+    <!-- Globe.gl -->
+    <script src="https://unpkg.com/globe.gl"></script>
+    
+    <!-- Three.js (Globe.gl phụ thuộc vào nó) -->
+    <script src="https://unpkg.com/three"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            padding: 20px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background: #e74c3c;
+        }
+        
+        .globe-container {
+            width: 100%;
+            height: 600px;
+            position: relative;
+            margin: 20px 0;
+        }
+        
+        .info-panel {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-btn:hover {
+            background: #c0392b;
+        }
+        
+        .stats {
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a href="main.html" class="back-btn">← Quay lại trang chủ</a>
+    
+    <div class="header">
+        <h1>🌍 Mô phỏng Quả Địa Cầu</h1>
+        <p>Khám phá Trái Đất với dữ liệu thời gian thực từ NASA</p>
+    </div>
+    
+    <div class="controls">
+        <button class="control-btn active" onclick="showCountries()">Quốc gia</button>
+        <button class="control-btn" onclick="showPopulation()">Dân số</button>
+        <button class="control-btn" onclick="showClimate()">Khí hậu</button>
+        <button class="control-btn" onclick="showSatellites()">Vệ tinh</button>
+        <button class="control-btn" onclick="toggleRotation()">Dừng/Quay</button>
+    </div>
+    
+    <div class="globe-container" id="globeViz"></div>
+    
+    <div class="info-panel">
+        <h3>Thông tin</h3>
+        <div id="globeInfo">
+            <p>Click vào các điểm trên địa cầu để xem thông tin chi tiết</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <strong>Quốc gia:</strong> <span id="countryCount">195</span>
+            </div>
+            <div class="stat-item">
+                <strong>Dân số:</strong> <span id="populationCount">8.1 tỷ</span>
+            </div>
+            <div class="stat-item">
+                <strong>Vệ tinh:</strong> <span id="satelliteCount">4,852</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Globe.js implementation
+        let globe;
+        let isRotating = true;
+        
+        // Sample data
+        const countriesData = [
+            { lat: 21.0285, lng: 105.8542, name: "Việt Nam", population: 97338579, color: "#ff6b6b" },
+            { lat: 39.9042, lng: 116.4074, name: "Trung Quốc", population: 1439323776, color: "#4ecdc4" },
+            { lat: 35.6762, lng: 139.6503, name: "Nhật Bản", population: 126476461, color: "#45b7d1" },
+            { lat: 40.7128, lng: -74.0060, name: "Mỹ", population: 331002651, color: "#96ceb4" },
+            { lat: 51.5074, lng: -0.1278, name: "Anh", population: 67886011, color: "#ffeaa7" },
+            { lat: 48.8566, lng: 2.3522, name: "Pháp", population: 65273511, color: "#dda0dd" },
+            { lat: 52.5200, lng: 13.4050, name: "Đức", population: 83783942, color: "#98d8c8" },
+            { lat: -23.5505, lng: -46.6333, name: "Brazil", population: 212559417, color: "#f7dc6f" },
+            { lat: 28.6139, lng: 77.2090, name: "Ấn Độ", population: 1380004385, color: "#bb8fce" },
+            { lat: -33.8688, lng: 151.2093, name: "Úc", population: 25499884, color: "#85c1e9" }
+        ];
+        
+        const satelliteData = [
+            { lat: 0, lng: 0, altitude: 0.1, name: "ISS", type: "Space Station" },
+            { lat: 30, lng: 45, altitude: 0.15, name: "Hubble", type: "Telescope" },
+            { lat: -30, lng: -45, altitude: 0.12, name: "GPS Satellite", type: "Navigation" },
+            { lat: 60, lng: 120, altitude: 0.18, name: "Weather Sat", type: "Weather" },
+            { lat: -60, lng: -120, altitude: 0.14, name: "Comm Satellite", type: "Communication" }
+        ];
+
+        function initGlobe() {
+            const globeContainer = document.getElementById('globeViz');
+
+            // Tạo quả địa cầu
+            globe = Globe()(globeContainer)
+                .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
+                .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+                .showGlobe(true)
+                .showAtmosphere(true)
+                .atmosphereColor('lightblue')
+                .atmosphereAltitude(0.15)
+                .enablePointerInteraction(true);
+
+            // Thêm ánh sáng nếu cần
+            const scene = globe.scene();
+            const light = new THREE.AmbientLight(0xffffff, 1.2);
+            scene.add(light);
+
+            // Auto-rotate
+            globe.controls().autoRotate = true;
+            globe.controls().autoRotateSpeed = 0.5;
+            
+            // Initial view
+            showCountries();
+        }
+        
+        function showCountries() {
+            setActiveButton(0);
+            globe
+                .pointsData(countriesData)
+                .pointColor(d => d.color)
+                .pointAltitude(0.01)
+                .pointRadius(0.5)
+                .pointLabel(d => `<div style="background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px; color: white;">
+                    <h3>${d.name}</h3>
+                    <p>Dân số: ${d.population.toLocaleString()}</p>
+                </div>`)
+                .onPointClick(point => {
+                    document.getElementById('globeInfo').innerHTML = `
+                        <h4>${point.name}</h4>
+                        <p><strong>Tọa độ:</strong> ${point.lat.toFixed(2)}, ${point.lng.toFixed(2)}</p>
+                        <p><strong>Dân số:</strong> ${point.population.toLocaleString()}</p>
+                    `;
+                });
+        }
+        
+        function showPopulation() {
+            setActiveButton(1);
+            const maxPop = Math.max(...countriesData.map(d => d.population));
+            globe
+                .pointsData(countriesData)
+                .pointColor(d => {
+                    const intensity = d.population / maxPop;
+                    return `rgba(255, ${255 - intensity * 255}, 0, 0.8)`;
+                })
+                .pointAltitude(d => d.population / maxPop * 0.1)
+                .pointRadius(d => Math.sqrt(d.population / maxPop) * 2)
+                .pointLabel(d => `<div style="background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px; color: white;">
+                    <h3>${d.name}</h3>
+                    <p>Dân số: ${d.population.toLocaleString()}</p>
+                    <p>Tỷ lệ: ${(d.population / maxPop * 100).toFixed(1)}%</p>
+                </div>`);
+        }
+        
+        function showClimate() {
+            setActiveButton(2);
+            const climateData = countriesData.map(d => ({
+                ...d,
+                temperature: Math.random() * 40 - 10,
+                humidity: Math.random() * 100
+            }));
+            
+            globe
+                .pointsData(climateData)
+                .pointColor(d => {
+                    if (d.temperature > 25) return '#ff4757';
+                    if (d.temperature > 15) return '#ffa502';
+                    if (d.temperature > 5) return '#2ed573';
+                    return '#3742fa';
+                })
+                .pointAltitude(0.02)
+                .pointRadius(1)
+                .pointLabel(d => `<div style="background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px; color: white;">
+                    <h3>${d.name}</h3>
+                    <p>Nhiệt độ: ${d.temperature.toFixed(1)}°C</p>
+                    <p>Độ ẩm: ${d.humidity.toFixed(1)}%</p>
+                </div>`);
+        }
+        
+        function showSatellites() {
+            setActiveButton(3);
+            globe
+                .pointsData(satelliteData)
+                .pointColor('#00ff00')
+                .pointAltitude(d => d.altitude)
+                .pointRadius(0.3)
+                .pointLabel(d => `<div style="background: rgba(0,0,0,0.8); padding: 10px; border-radius: 5px; color: white;">
+                    <h3>${d.name}</h3>
+                    <p>Loại: ${d.type}</p>
+                    <p>Độ cao: ${(d.altitude * 6371).toFixed(0)} km</p>
+                </div>`)
+                .onPointClick(point => {
+                    document.getElementById('globeInfo').innerHTML = `
+                        <h4>${point.name}</h4>
+                        <p><strong>Loại:</strong> ${point.type}</p>
+                        <p><strong>Độ cao:</strong> ${(point.altitude * 6371).toFixed(0)} km</p>
+                        <p><strong>Tọa độ:</strong> ${point.lat.toFixed(2)}, ${point.lng.toFixed(2)}</p>
+                    `;
+                });
+        }
+        
+        function toggleRotation() {
+            isRotating = !isRotating;
+            globe.controls().autoRotate = isRotating;
+            const btn = document.querySelectorAll('.control-btn')[4];
+            btn.textContent = isRotating ? 'Dừng' : 'Quay';
+        }
+        
+        function setActiveButton(index) {
+            document.querySelectorAll('.control-btn').forEach((btn, i) => {
+                if (i === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initGlobe);
+    </script>
+</body>
+</html>
